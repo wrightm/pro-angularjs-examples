@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Loops Example</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<script type="text/javascript">
+		var myArray = [100, "Adam", true];
+
+		for(var i = 0; i < myArray.length; i++) {
+			console.log("Index "+i+": "+myArray[i]);
+		}
+
+		console.log("---");
+
+		angular.forEach(myArray, function(key, value){
+			console.log(key+": "+value);
+		});
+
+		console.log("---");
+		var myDict = {'Adam': 100, 'Bob' : 200};
+
+		angular.forEach(myDict, function(key, value){
+			console.log('Dict: '+value+": "+key);
+		});
+
+
+		if("Adam" in myDict){
+			console.log('Dict Adam exists');
+		}
+
+	</script>
+</head>
+<body>
+	This is a simple example
+</body>
+</html>
