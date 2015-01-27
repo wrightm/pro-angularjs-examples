@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<<html ng-app="exampleApp">
+<head>
+	<title>BroadCast</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css" />
+	<script type="text/javascript">
+		angular.module('exampleApp', [])
+			.service('ZipCodes', function($rootScope){
+				return {
+					setZipCode : function(type, zip){
+						this[type] = zip;
+						console.log('broadcast');
+						$rootScope.$broadcast('zipCodeUpdated', {
+							type: type, zipCode: zip
+						});
+					}
+				}
+			})
+			.controller('simpleController', function($scope, ZipCodes){
+
+				$scope.$on('zipCodeUpdated', function(event, args){
+					console.log('zip code update', event, args);
+					$scope[args.type] = args.zipCode;
+				});
+
+				$scope.setAddress = function(type, zip){
+					ZipCodes.setZipCode(type, zip);
+					console.log("Types: "+ type + " " + zip);
+				};
+
+				$scope.copyAddress = function(){
+					$scope.zip = $scope.billingZip;
+				}
+			});
+	</script>
+</head>
+<body>
+	<div class="well" ng-controller="simpleController">
+        <h4>Billing Zip Code</h4>
+        <div class="form-group">
+            <input class="form-control" ng-model="zip">
+        </div>
+        <button class="btn btn-primary" ng-click="setAddress('billingZip', zip)">
+            Save Billing
+        </button>
+    </div>
+    <div class="well" ng-controller="simpleController">
+        <h4>Shipping Zip Code</h4>
+        <div class="form-group">
+            <input class="form-control" ng-model="zip">
+        </div>
+        <button class="btn btn-primary" ng-click="copyAddress()">
+            Use Billing
+        </button>
+        <button class="btn btn-primary" ng-click="setAddress('shippingZip', zip)">
+            Save Shipping
+        </button>
+    </div>
+</body>
+</html>
