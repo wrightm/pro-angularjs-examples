@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Click And Toggle</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<style type="text/css">
+		.bold { font-weight: bold; }
+	</style>
+	<script type="text/javascript">
+		angular.module('exampleApp', [])
+			.directive('demoDirective', function(){
+				return function(scope,element,attrs){
+					var listElem = angular.element('<ol>');
+					element.append(listElem);
+                    for (var i = 0; i < scope.names.length; i++) {
+                        listElem.append(angular.element("<li>")
+                            .append(angular.element("<span>").text(scope.names[i])));
+                    }
+                    var buttons = element.find("button");
+                    buttons.on("click", function (e) {
+                        element.find("li").toggleClass("bold");
+                    });
+				}
+			})
+			.controller('defaultController', function($scope){
+				$scope.names = ["Apples", "Bananas", "Oranges"];
+			});
+	</script>
+</head>
+<body ng-controller="defaultController">
+	<h3>Fruit</h3>
+	<div demo-directive>
+		<button>Click Me</button>
+	</div>
+</body>
+</html>

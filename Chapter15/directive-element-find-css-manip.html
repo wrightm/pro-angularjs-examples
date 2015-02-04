@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Element Find CSS MANIP</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp', [])
+			.directive('demoDirective', function(){
+				return function(scope, element, attrs){
+					var items = element.find("li");
+					console.log('items: ', items);
+					for(var i=0; i < items.length; i++){
+						var item = items.eq(i);
+						if(item.text() == "Oranges"){
+							item.css('font-weight', 'bold');
+						} else {
+							item.css('font-weight', 'normal');
+						}
+					}
+				}
+			})
+			.controller('defaultController', [function($scope){
+
+			}]);
+	</script>
+</head>
+<body ng-controller="defaultController">
+	<h3>Fruit</h3>
+	<ol demo-directive>
+		<li>Apples</li>
+		<ul>
+			<li>Bananas</li>
+			<li>Cherries</li>
+			<li>Oranges</li>
+		</ul>
+		<li>Oranges</li>
+		<li>Pears</li>
+	</ol>
+</body>
+</html>

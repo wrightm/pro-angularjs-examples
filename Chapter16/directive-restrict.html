@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Directive Restrict</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module('exampleApp', [])
+			.directive('unorderedList', function(){
+				return {
+					restrict : 'EAC',
+					link : function(scope,element,attrs){
+						var data = scope[attrs["unorderedList"] || attrs["listSource"]];
+                        var propertyExpression = attrs["listProperty"] || "price | currency";
+                        if (angular.isArray(data)) {
+                            var listElem = angular.element("<ul>");
+                            if (element[0].nodeName == "#comment") {
+                                element.parent().append(listElem);
+                            } else {
+                                element.append(listElem);
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                var itemElement = angular.element("<li>")
+                                    .text(scope.$eval(propertyExpression, data[i]));
+                                listElem.append(itemElement);
+                            }
+                        }
+					}
+				}
+			})
+			.controller('defaultController', function($scope){
+				$scope.products = [
+                    { name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+                    { name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+                    { name: "Pears", category: "Fruit", price: 2.02, expiry: 6 }
+                ];
+			});
+	</script>
+</head>
+<body ng-controller="defaultController">
+	<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Products</h3>
+        </div>
+        <div class="panel-body">
+            <div unordered-list="products" list-property="price | currency"></div>        
+        </div>
+    </div>
+</body>
+</html>

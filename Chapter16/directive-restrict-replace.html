@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Directive Restrict Replace</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css" />
+	<script type="text/javascript">
+		angular.module('exampleApp', [])
+			.directive('unorderedList', function(){
+				return {
+					link: function(scope, element, attrs){
+						scope.data = scope[attrs['unorderedList']];
+					},
+					restrict: 'A',
+					templateUrl: 'tableTemplate.html',
+					replace: true
+				}
+			})
+			.controller('defaultController', function($scope){
+				$scope.products = [
+					{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+                    { name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+                    { name: "Pears", category: "Fruit", price: 2.02, expiry: 6 }
+				];
+			})
+	</script>
+</head>
+<body ng-controller='defaultController'>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Products</h3>
+		</div>
+		<div class="panel-body">
+			<div unordered-list="products" class="table table-striped" ng-repeat="count in [1,2,3]">
+				This is where the list will go
+			</div>
+		</div>
+	</div>
+</body>
+</html>
