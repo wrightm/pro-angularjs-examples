@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app='exampleApp'>
+<head>
+	<title>Directive Trasclude Function</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css" />
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+			.controller('defaultController', ['$scope',function($scope){
+				$scope.products = [{ name: "Apples", price: 1.20}, 
+									{ name: "Bananas", price: 2.42 }, 
+									{ name: "Pears", price: 2.02 }];
+
+				$scope.changeData = function(){
+					$scope.products.push({ name: "Cherries", price: 4.02 });
+					for(var i = 0; i < $scope.products.length; i++){
+						$scope.products[i].price++;
+					}
+				}
+			}])
+			.directive('simpleRepeater', function(){
+				return {
+					scope: {
+						data : '=source',
+						propName: '@itemName'
+					},
+					transclude: 'element',
+					compile: function(element, attrs, transcludeFn){
+						return function($scope, $element, $attr){
+							$scope.$watch('data.length', function(){
+								var parent = $element.parent();
+								var children = parent.children();
+								console.log('parent: ',parent);
+								console.log('children: ', children);
+								children.remove();
+								for(var index in $scope.data){
+									var item = $scope.data[index];
+									var childScope = $scope.$new();
+									childScope[$scope.propName] = item;
+									transcludeFn(childScope, function(clone){
+										parent.append(clone);
+									})
+								}
+							});
+						}
+					}
+				}
+			})
+	</script>
+</head>
+<body ng-controller='defaultController' class='panel panel-body'>
+	<table class='table table-striped'>
+		<thead>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Price
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr simple-repeater source="products" item-name="item">
+				<td>{{item.name}}</td>
+				<td>{{item.price | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<button class='btn btn-default text' ng-click='changeData()'>
+		Change
+	</button>
+</body>
+</html>
